@@ -1,10 +1,9 @@
-﻿namespace NWaves.Utils
+﻿namespace NWaves.Utils;
+
+public enum InterpolationMode
 {
-    public enum InterpolationMode
-    {
-        Linear,
-        Cubic,
-        Thiran,
-        Nearest
-    }
+    Linear,
+    Cubic,
+    Thiran,
+    Nearest
 }

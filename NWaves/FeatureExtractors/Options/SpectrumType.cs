@@ -1,28 +1,27 @@
-﻿namespace NWaves.FeatureExtractors.Options
+﻿namespace NWaves.FeatureExtractors.Options;
+
+/// <summary>
+/// Defines spectrum calculation modes.
+/// </summary>
+public enum SpectrumType
 {
     /// <summary>
-    /// Defines spectrum calculation modes.
+    /// Sqrt(re*re + im*im).
     /// </summary>
-    public enum SpectrumType
-    {
-        /// <summary>
-        /// Sqrt(re*re + im*im).
-        /// </summary>
-        Magnitude,
+    Magnitude,
 
-        /// <summary>
-        /// re*re + im*im.
-        /// </summary>
-        Power,
+    /// <summary>
+    /// re*re + im*im.
+    /// </summary>
+    Power,
 
-        /// <summary>
-        /// Sqrt(re*re + im*im) / fftSize.
-        /// </summary>
-        MagnitudeNormalized,
+    /// <summary>
+    /// Sqrt(re*re + im*im) / fftSize.
+    /// </summary>
+    MagnitudeNormalized,
 
-        /// <summary>
-        /// (re*re + im*im) / fftSize.
-        /// </summary>
-        PowerNormalized
-    }
+    /// <summary>
+    /// (re*re + im*im) / fftSize.
+    /// </summary>
+    PowerNormalized
 }

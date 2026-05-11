@@ -1,18 +1,17 @@
-﻿namespace NWaves.Effects.Base
+﻿namespace NWaves.Effects.Base;
+
+/// <summary>
+/// Interface for wet/dry mixers.
+/// </summary>
+public interface IMixable
 {
     /// <summary>
-    /// Interface for wet/dry mixers.
+    /// Gets or sets wet gain.
     /// </summary>
-    public interface IMixable
-    {
-        /// <summary>
-        /// Gets or sets wet gain.
-        /// </summary>
-        float Wet { get; set; }
+    float Wet { get; set; }
 
-        /// <summary>
-        /// Gets or sets dry gain.
-        /// </summary>
-        float Dry { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets dry gain.
+    /// </summary>
+    float Dry { get; set; }
 }

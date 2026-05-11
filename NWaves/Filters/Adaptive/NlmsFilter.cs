@@ -1,54 +1,53 @@
 ﻿using System.Linq;
 
-namespace NWaves.Filters.Adaptive
+namespace NWaves.Filters.Adaptive;
+
+/// <summary>
+/// Represents NLMS Adaptive filter (Normalized Least-Mean-Squares algorithm + Epsilon).
+/// </summary>
+public class NlmsFilter : AdaptiveFilter
 {
+    private readonly float _mu;
+    private readonly float _eps;
+    private readonly float _leakage;
+
     /// <summary>
-    /// Represents NLMS Adaptive filter (Normalized Least-Mean-Squares algorithm + Epsilon).
+    /// Constructs <see cref="NlmsFilter"/> of given <paramref name="order"/>.
     /// </summary>
-    public class NlmsFilter : AdaptiveFilter
+    /// <param name="order">Filter order</param>
+    /// <param name="mu">Mu</param>
+    /// <param name="eps">Epsilon</param>
+    /// <param name="leakage">Leakage</param>
+    public NlmsFilter(int order, float mu = 0.75f, float eps = 1, float leakage = 0) : base(order)
     {
-        private readonly float _mu;
-        private readonly float _eps;
-        private readonly float _leakage;
+        _mu = mu;
+        _eps = eps;
+        _leakage = leakage;
+    }
 
-        /// <summary>
-        /// Constructs <see cref="NlmsFilter"/> of given <paramref name="order"/>.
-        /// </summary>
-        /// <param name="order">Filter order</param>
-        /// <param name="mu">Mu</param>
-        /// <param name="eps">Epsilon</param>
-        /// <param name="leakage">Leakage</param>
-        public NlmsFilter(int order, float mu = 0.75f, float eps = 1, float leakage = 0) : base(order)
+    /// <summary>
+    /// Processes one sample of input and desired signals and adapts filter coefficients.
+    /// </summary>
+    /// <param name="input">Sample of input signal</param>
+    /// <param name="desired">Sample of desired signal</param>
+    public override float Process(float input, float desired)
+    {
+        var offset = _delayLineOffset;
+
+        _delayLine[offset + _kernelSize] = input;   // duplicate it for better loop performance
+
+
+        var y = Process(input);
+
+        var e = desired - y;
+
+        var norm = _eps + _delayLine.Sum(x => x * x);
+
+        for (var i = 0; i < _kernelSize; i++, offset++)
         {
-            _mu = mu;
-            _eps = eps;
-            _leakage = leakage;
+            _b[i] = _b[_kernelSize + i] = (1 - _leakage * _mu) * _b[i] + _mu * e * _delayLine[offset] / norm;
         }
 
-        /// <summary>
-        /// Processes one sample of input and desired signals and adapts filter coefficients.
-        /// </summary>
-        /// <param name="input">Sample of input signal</param>
-        /// <param name="desired">Sample of desired signal</param>
-        public override float Process(float input, float desired)
-        {
-            var offset = _delayLineOffset;
-
-            _delayLine[offset + _kernelSize] = input;   // duplicate it for better loop performance
-
-
-            var y = Process(input);
-
-            var e = desired - y;
-
-            var norm = _eps + _delayLine.Sum(x => x * x);
-
-            for (var i = 0; i < _kernelSize; i++, offset++)
-            {
-                _b[i] = _b[_kernelSize + i] = (1 - _leakage * _mu) * _b[i] + _mu * e * _delayLine[offset] / norm;
-            }
-
-            return y;
-        }
+        return y;
     }
 }

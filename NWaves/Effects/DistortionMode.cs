@@ -1,11 +1,10 @@
-﻿namespace NWaves.Effects
+﻿namespace NWaves.Effects;
+
+public enum DistortionMode
 {
-    public enum DistortionMode
-    {
-        SoftClipping,
-        HardClipping,
-        Exponential,
-        FullWaveRectify,
-        HalfWaveRectify
-    }
+    SoftClipping,
+    HardClipping,
+    Exponential,
+    FullWaveRectify,
+    HalfWaveRectify
 }

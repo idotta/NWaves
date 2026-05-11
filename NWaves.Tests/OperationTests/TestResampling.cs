@@ -2,23 +2,22 @@
 using NWaves.Operations;
 using NWaves.Signals;
 
-namespace NWaves.Tests.OperationTests
+namespace NWaves.Tests.OperationTests;
+
+[TestFixture]
+public class TestResampling
 {
-    [TestFixture]
-    public class TestResampling
+    [Test]
+    public void TestSameSamplingRate()
     {
-        [Test]
-        public void TestSameSamplingRate()
+        var signal = new DiscreteSignal(16000, [1.0f, -2, 3, 1, 4, -2, 1, -5, 3]);
+
+        var resampled = Operation.Resample(signal, 16000);
+
+        Assert.Multiple(() =>
         {
-            var signal = new DiscreteSignal(16000, new [] {1.0f, -2, 3, 1, 4, -2, 1, -5, 3});
-
-            var resampled = Operation.Resample(signal, 16000);
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(resampled.Samples, Is.EqualTo(resampled.Samples).Within(1e-10));
-                Assert.That(resampled, Is.Not.SameAs(signal));
-            });
-        }
+            Assert.That(resampled.Samples, Is.EqualTo(resampled.Samples).Within(1e-10));
+            Assert.That(resampled, Is.Not.SameAs(signal));
+        });
     }
 }

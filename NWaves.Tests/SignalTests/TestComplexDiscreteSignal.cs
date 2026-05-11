@@ -2,240 +2,239 @@
 using NUnit.Framework;
 using NWaves.Signals;
 
-namespace NWaves.Tests.SignalTests
+namespace NWaves.Tests.SignalTests;
+
+[TestFixture]
+public class TestComplexDiscreteSignal
 {
-    [TestFixture]
-    public class TestComplexDiscreteSignal
+    // Arrange
+    private readonly ComplexDiscreteSignal _signal = new ComplexDiscreteSignal
+        (8000, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 
+               [0, 0, 1, 0, 0, 1, 0, 0, 1, 0]);
+
+    private readonly ComplexDiscreteSignal _constant = new ComplexDiscreteSignal
+        (8000, [5, 5, 5, 5, 5],
+               [1, 1, 1, 1, 1]);
+
+    private readonly ComplexDiscreteSignal _small = new ComplexDiscreteSignal
+        (16000, [5, 2, 4],
+                [3, 0, 8]);
+
+    [Test]
+    public void TestInitializeWithBadSamplingRate()
     {
-        // Arrange
-        private readonly ComplexDiscreteSignal _signal = new ComplexDiscreteSignal
-            (8000, new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 
-                   new double[] { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0 });
-
-        private readonly ComplexDiscreteSignal _constant = new ComplexDiscreteSignal
-            (8000, new double[] { 5, 5, 5, 5, 5 },
-                   new double[] { 1, 1, 1, 1, 1 });
-
-        private readonly ComplexDiscreteSignal _small = new ComplexDiscreteSignal
-            (16000, new double[] { 5, 2, 4 },
-                    new double[] { 3, 0, 8 });
-
-        [Test]
-        public void TestInitializeWithBadSamplingRate()
+        Assert.Multiple(() =>
         {
-            Assert.Multiple(() =>
-            {
-                Assert.Throws<ArgumentException>(() => { var s = new ComplexDiscreteSignal(0, new double[] {1}); });
-                Assert.Throws<ArgumentException>(() => { var s = new ComplexDiscreteSignal(-8000, new double[] {1}); });
-            });
-        }
+            Assert.Throws<ArgumentException>(() => { var s = new ComplexDiscreteSignal(0, new double[] {1}); });
+            Assert.Throws<ArgumentException>(() => { var s = new ComplexDiscreteSignal(-8000, new double[] {1}); });
+        });
+    }
 
-        [Test]
-        public void TestInitializeWithDifferentRealAndImagSizes()
+    [Test]
+    public void TestInitializeWithDifferentRealAndImagSizes()
+    {
+        Assert.Throws<ArgumentException>(() =>
         {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var s = new ComplexDiscreteSignal(8000, new double[] { 1, 2 }, new double[] {3});
-            });
-        }
+            var s = new ComplexDiscreteSignal(8000, [1, 2], [3]);
+        });
+    }
 
-        [Test]
-        public void TestPositiveDelay()
+    [Test]
+    public void TestPositiveDelay()
+    {
+        //Act
+        var delayed = _signal.Delay(3);
+
+        //Assert
+        Assert.Multiple(() =>
         {
-            //Act
-            var delayed = _signal.Delay(3);
+            Assert.That(delayed.Real, Is.EqualTo(new double[] {0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+            Assert.That(delayed.Imag, Is.EqualTo(new double[] {0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0}));
+        });
+    }
 
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(delayed.Real, Is.EqualTo(new double[] {0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
-                Assert.That(delayed.Imag, Is.EqualTo(new double[] {0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0}));
-            });
-        }
+    [Test]
+    public void TestNegativeDelay()
+    {
+        //Act
+        var delayed = _signal.Delay(-3);
 
-        [Test]
-        public void TestNegativeDelay()
+        //Assert
+        Assert.Multiple(() =>
         {
-            //Act
-            var delayed = _signal.Delay(-3);
+            Assert.That(delayed.Real, Is.EqualTo(new double[] {3, 4, 5, 6, 7, 8, 9}));
+            Assert.That(delayed.Imag, Is.EqualTo(new double[] {0, 0, 1, 0, 0, 1, 0}));
+        });
+    }
 
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(delayed.Real, Is.EqualTo(new double[] {3, 4, 5, 6, 7, 8, 9}));
-                Assert.That(delayed.Imag, Is.EqualTo(new double[] {0, 0, 1, 0, 0, 1, 0}));
-            });
-        }
+    [Test]
+    public void TestNegativeDelayTooBig()
+    {
+        Assert.Throws<ArgumentException>(() => { _signal.Delay(-10); });
+    }
 
-        [Test]
-        public void TestNegativeDelayTooBig()
+    [Test]
+    public void TestSuperimposeBroadcastArgument()
+    {
+        //Act
+        var combination = _signal.Superimpose(_constant);
+
+        //Assert
+        Assert.Multiple(() =>
         {
-            Assert.Throws<ArgumentException>(() => { _signal.Delay(-10); });
-        }
+            Assert.That(combination.Real, Is.EqualTo(new double[] {5, 6, 7, 8, 9, 5, 6, 7, 8, 9}));
+            Assert.That(combination.Imag, Is.EqualTo(new double[] {1, 1, 2, 1, 1, 1, 0, 0, 1, 0}));
+        });
+    }
 
-        [Test]
-        public void TestSuperimposeBroadcastArgument()
+    [Test]
+    public void TestSuperimposeBroadcastObject()
+    {
+        //Act
+        var combination1 = _constant.Superimpose(_signal);
+        var combination2 = _constant + _signal;
+
+        //Assert
+        Assert.Multiple(() =>
         {
-            //Act
-            var combination = _signal.Superimpose(_constant);
+            Assert.That(combination1.Real, Is.EqualTo(new double[] {5, 6, 7, 8, 9, 5, 6, 7, 8, 9}));
+            Assert.That(combination1.Imag, Is.EqualTo(new double[] {1, 1, 2, 1, 1, 1, 0, 0, 1, 0}));
+            Assert.That(combination2.Real, Is.EqualTo(new double[] {5, 6, 7, 8, 9, 5, 6, 7, 8, 9}));
+            Assert.That(combination2.Imag, Is.EqualTo(new double[] {1, 1, 2, 1, 1, 1, 0, 0, 1, 0}));
+        });
+    }
 
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(combination.Real, Is.EqualTo(new double[] {5, 6, 7, 8, 9, 5, 6, 7, 8, 9}));
-                Assert.That(combination.Imag, Is.EqualTo(new double[] {1, 1, 2, 1, 1, 1, 0, 0, 1, 0}));
-            });
-        }
+    [Test]
+    public void TestSuperimposeWithDifferentSamplingRates()
+    {
+        Assert.Throws<ArgumentException>(() => { _signal.Superimpose(_small); });
+    }
 
-        [Test]
-        public void TestSuperimposeBroadcastObject()
+    [Test]
+    public void TestConcatenate()
+    {
+        //Act
+        var concatenation = _signal.Concatenate(_constant);
+
+        //Assert
+        Assert.Multiple(() =>
         {
-            //Act
-            var combination1 = _constant.Superimpose(_signal);
-            var combination2 = _constant + _signal;
+            Assert.That(concatenation.Real, Is.EqualTo(new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 5, 5, 5, 5, 5}));
+            Assert.That(concatenation.Imag, Is.EqualTo(new double[] {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1}));
+        });
+    }
 
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(combination1.Real, Is.EqualTo(new double[] {5, 6, 7, 8, 9, 5, 6, 7, 8, 9}));
-                Assert.That(combination1.Imag, Is.EqualTo(new double[] {1, 1, 2, 1, 1, 1, 0, 0, 1, 0}));
-                Assert.That(combination2.Real, Is.EqualTo(new double[] {5, 6, 7, 8, 9, 5, 6, 7, 8, 9}));
-                Assert.That(combination2.Imag, Is.EqualTo(new double[] {1, 1, 2, 1, 1, 1, 0, 0, 1, 0}));
-            });
-        }
+    [Test]
+    public void TestConcatenateWithDifferentSamplingRates()
+    {
+        Assert.Throws<ArgumentException>(() => { _signal.Concatenate(_small); });
+    }
 
-        [Test]
-        public void TestSuperimposeWithDifferentSamplingRates()
+    [Test]
+    public void TestRepeat()
+    {
+        //Act
+        var repeated = _small.Repeat(3);
+
+        //Assert
+        Assert.Multiple(() =>
         {
-            Assert.Throws<ArgumentException>(() => { _signal.Superimpose(_small); });
-        }
+            Assert.That(repeated.Real, Is.EqualTo(new double[] {5, 2, 4, 5, 2, 4, 5, 2, 4}));
+            Assert.That(repeated.Imag, Is.EqualTo(new double[] {3, 0, 8, 3, 0, 8, 3, 0, 8}));
+        });
+    }
 
-        [Test]
-        public void TestConcatenate()
+    [Test]
+    public void TestRepeatNegativeTimes()
+    {
+        Assert.Throws<ArgumentException>(() => { _signal.Repeat(-2); });
+    }
+
+    [Test]
+    public void TestRepeatZeroTimes()
+    {
+        Assert.Throws<ArgumentException>(() => { var repeated = _signal.Repeat(0); });
+    }
+
+    [Test]
+    public void TestAmplification()
+    {
+        //Act
+        var amplified = _small * 2;
+
+        //Assert
+        Assert.Multiple(() =>
         {
-            //Act
-            var concatenation = _signal.Concatenate(_constant);
+            Assert.That(amplified.Real, Is.EqualTo(new float[] {10, 4, 8}));
+            Assert.That(amplified.Imag, Is.EqualTo(new float[] {6, 0, 16}));
+        });
+    }
 
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(concatenation.Real, Is.EqualTo(new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 5, 5, 5, 5, 5}));
-                Assert.That(concatenation.Imag, Is.EqualTo(new double[] {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1}));
-            });
-        }
+    [Test]
+    public void TestSlice()
+    {
+        // Act
+        var slice = _signal[3, 7];
 
-        [Test]
-        public void TestConcatenateWithDifferentSamplingRates()
+        // Assert
+        Assert.Multiple(() =>
         {
-            Assert.Throws<ArgumentException>(() => { _signal.Concatenate(_small); });
-        }
+            Assert.That(slice.Real, Is.EqualTo(new double[] {3, 4, 5, 6}));
+            Assert.That(slice.Imag, Is.EqualTo(new double[] {0, 0, 1, 0}));
+        });
+    }
 
-        [Test]
-        public void TestRepeat()
+    [Test]
+    public void TestSliceIndexOutOfRange()
+    {
+        Assert.Throws<ArgumentException>(() => { var slice = _signal[5, 15]; });
+    }
+
+    [Test]
+    public void TestSliceWrongRange()
+    {
+        Assert.Multiple(() =>
         {
-            //Act
-            var repeated = _small.Repeat(3);
+            Assert.Throws<ArgumentException>(() => { var slice = _signal[5, 5]; });
+            Assert.Throws<ArgumentException>(() => { var slice = _signal[5, 4]; });
+        });
+    }
 
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(repeated.Real, Is.EqualTo(new double[] {5, 2, 4, 5, 2, 4, 5, 2, 4}));
-                Assert.That(repeated.Imag, Is.EqualTo(new double[] {3, 0, 8, 3, 0, 8, 3, 0, 8}));
-            });
-        }
+    [Test]
+    public void TestFirstSamples()
+    {
+        // Act
+        var first = _signal.First(3);
 
-        [Test]
-        public void TestRepeatNegativeTimes()
+        // Assert
+        Assert.Multiple(() =>
         {
-            Assert.Throws<ArgumentException>(() => { _signal.Repeat(-2); });
-        }
+            Assert.That(first.Real, Is.EqualTo(new double[] {0, 1, 2}));
+            Assert.That(first.Imag, Is.EqualTo(new double[] {0, 0, 1}));
+        });
+    }
 
-        [Test]
-        public void TestRepeatZeroTimes()
+    [Test]
+    public void TestLastSamples()
+    {
+        // Act
+        var last = _signal.Last(3);
+
+        // Assert
+        Assert.Multiple(() =>
         {
-            Assert.Throws<ArgumentException>(() => { var repeated = _signal.Repeat(0); });
-        }
+            Assert.That(last.Real, Is.EqualTo(new double[] {7, 8, 9}));
+            Assert.That(last.Imag, Is.EqualTo(new double[] {0, 1, 0}));
+        });
+    }
 
-        [Test]
-        public void TestAmplification()
+    [Test]
+    public void TestNegativeFirstOrLast()
+    {
+        Assert.Multiple(() =>
         {
-            //Act
-            var amplified = _small * 2;
-
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(amplified.Real, Is.EqualTo(new float[] {10, 4, 8}));
-                Assert.That(amplified.Imag, Is.EqualTo(new float[] {6, 0, 16}));
-            });
-        }
-
-        [Test]
-        public void TestSlice()
-        {
-            // Act
-            var slice = _signal[3, 7];
-
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(slice.Real, Is.EqualTo(new double[] {3, 4, 5, 6}));
-                Assert.That(slice.Imag, Is.EqualTo(new double[] {0, 0, 1, 0}));
-            });
-        }
-
-        [Test]
-        public void TestSliceIndexOutOfRange()
-        {
-            Assert.Throws<ArgumentException>(() => { var slice = _signal[5, 15]; });
-        }
-
-        [Test]
-        public void TestSliceWrongRange()
-        {
-            Assert.Multiple(() =>
-            {
-                Assert.Throws<ArgumentException>(() => { var slice = _signal[5, 5]; });
-                Assert.Throws<ArgumentException>(() => { var slice = _signal[5, 4]; });
-            });
-        }
-
-        [Test]
-        public void TestFirstSamples()
-        {
-            // Act
-            var first = _signal.First(3);
-
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(first.Real, Is.EqualTo(new double[] {0, 1, 2}));
-                Assert.That(first.Imag, Is.EqualTo(new double[] {0, 0, 1}));
-            });
-        }
-
-        [Test]
-        public void TestLastSamples()
-        {
-            // Act
-            var last = _signal.Last(3);
-
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(last.Real, Is.EqualTo(new double[] {7, 8, 9}));
-                Assert.That(last.Imag, Is.EqualTo(new double[] {0, 1, 0}));
-            });
-        }
-
-        [Test]
-        public void TestNegativeFirstOrLast()
-        {
-            Assert.Multiple(() =>
-            {
-                Assert.Throws<ArgumentException>(() => { var first = _signal.First(-3); });
-                Assert.Throws<ArgumentException>(() => { var last = _signal.Last(-5); });
-            });
-        }
+            Assert.Throws<ArgumentException>(() => { var first = _signal.First(-3); });
+            Assert.Throws<ArgumentException>(() => { var last = _signal.Last(-5); });
+        });
     }
 }

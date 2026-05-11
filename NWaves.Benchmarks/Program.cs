@@ -1,26 +1,25 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace NWaves.Benchmarks
+namespace NWaves.Benchmarks;
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            //var summary = BenchmarkRunner.Run<IirFiltersVersion2Vs4Vs5VsZi>();
+        //var summary = BenchmarkRunner.Run<IirFiltersVersion2Vs4Vs5VsZi>();
 
-            //var summary = BenchmarkRunner.Run<FirFiltersVersion2Vs5VsZi>();
+        //var summary = BenchmarkRunner.Run<FirFiltersVersion2Vs5VsZi>();
 
-            //var summary = BenchmarkRunner.Run<FftArrayVsSpan>();
+        //var summary = BenchmarkRunner.Run<FftArrayVsSpan>();
 
-            //var summary = BenchmarkRunner.Run<MedianFilters>();
+        //var summary = BenchmarkRunner.Run<MedianFilters>();
 
-            //var summary = BenchmarkRunner.Run<OfflineFilterForLoopVsLinq>();
+        //var summary = BenchmarkRunner.Run<OfflineFilterForLoopVsLinq>();
 
-            //var summary = BenchmarkRunner.Run<FirFiltersVsBlockConvolvers>();
+        //var summary = BenchmarkRunner.Run<FirFiltersVsBlockConvolvers>();
 
-            //var summary = BenchmarkRunner.Run<MovingAverageFilters>();
+        //var summary = BenchmarkRunner.Run<MovingAverageFilters>();
 
-            new TestOutputConsistency().Run();
-        }
+        new TestOutputConsistency().Run();
     }
 }

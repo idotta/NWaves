@@ -1,10 +1,9 @@
-﻿namespace NWaves.Transforms.Wavelets
+﻿namespace NWaves.Transforms.Wavelets;
+
+public enum WaveletFamily
 {
-    public enum WaveletFamily
-    {
-        Haar,
-        Daubechies,
-        Coiflet,
-        Symlet
-    }
+    Haar,
+    Daubechies,
+    Coiflet,
+    Symlet
 }

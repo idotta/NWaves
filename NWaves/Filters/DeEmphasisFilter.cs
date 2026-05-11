@@ -1,23 +1,22 @@
 ﻿using NWaves.Filters.OnePole;
 
-namespace NWaves.Filters
+namespace NWaves.Filters;
+
+/// <summary>
+/// Represents de-emphasis IIR filter.
+/// </summary>
+public class DeEmphasisFilter : OnePoleFilter
 {
     /// <summary>
-    /// Represents de-emphasis IIR filter.
+    /// Constructs <see cref="DeEmphasisFilter"/>.
     /// </summary>
-    public class DeEmphasisFilter : OnePoleFilter
+    /// <param name="a">De-emphasis coefficient</param>
+    /// <param name="normalize">Normalize freq response to unit gain</param>
+    public DeEmphasisFilter(double a = 0.97, bool normalize = false) : base(1.0, -a)
     {
-        /// <summary>
-        /// Constructs <see cref="DeEmphasisFilter"/>.
-        /// </summary>
-        /// <param name="a">De-emphasis coefficient</param>
-        /// <param name="normalize">Normalize freq response to unit gain</param>
-        public DeEmphasisFilter(double a = 0.97, bool normalize = false) : base(1.0, -a)
+        if (normalize)
         {
-            if (normalize)
-            {
-                _b[0] = (float)(1 - a);
-            }
+            _b[0] = (float)(1 - a);
         }
     }
 }

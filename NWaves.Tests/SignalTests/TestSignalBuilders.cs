@@ -2,107 +2,106 @@
 using NWaves.Signals;
 using NWaves.Signals.Builders;
 
-namespace NWaves.Tests.SignalTests
+namespace NWaves.Tests.SignalTests;
+
+[TestFixture]
+public class TestSignalBuilders
 {
-    [TestFixture]
-    public class TestSignalBuilders
+    [Test]
+    public void TestSimpleSinusoidBuilder()
     {
-        [Test]
-        public void TestSimpleSinusoidBuilder()
+        var sinusoid = new SineBuilder()
+                                .SetParameter("freq", 0.05f)
+                                .OfLength(20)
+                                .Build();
+
+        Assert.Multiple(() =>
         {
-            var sinusoid = new SineBuilder()
-                                    .SetParameter("freq", 0.05f)
-                                    .OfLength(20)
-                                    .Build();
+            Assert.That(sinusoid[0], Is.EqualTo(0.0).Within(1e-7));
+            Assert.That(sinusoid[5], Is.EqualTo(1.0).Within(1e-7));
+            Assert.That(sinusoid[10], Is.EqualTo(0.0).Within(1e-7));
+            Assert.That(sinusoid[15], Is.EqualTo(-1.0).Within(1e-7));
+            Assert.That(sinusoid.Length, Is.EqualTo(20));
+        });
+    }
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(sinusoid[0], Is.EqualTo(0.0).Within(1e-7));
-                Assert.That(sinusoid[5], Is.EqualTo(1.0).Within(1e-7));
-                Assert.That(sinusoid[10], Is.EqualTo(0.0).Within(1e-7));
-                Assert.That(sinusoid[15], Is.EqualTo(-1.0).Within(1e-7));
-                Assert.That(sinusoid.Length, Is.EqualTo(20));
-            });
-        }
+    [Test]
+    public void TestBuilderSuperimpose()
+    {
+        var constants = new DiscreteSignal(1, length: 6, value: 2.0f);
 
-        [Test]
-        public void TestBuilderSuperimpose()
+        var sinusoid = new SineBuilder()
+                                .SetParameter("freq", 0.05f)
+                                .SuperimposedWith(constants)
+                                .OfLength(20)
+                                .SuperimposedWith(constants)    // twice
+                                .Build();
+
+        Assert.Multiple(() =>
         {
-            var constants = new DiscreteSignal(1, length: 6, value: 2.0f);
+            Assert.That(sinusoid[0], Is.EqualTo(4.0).Within(1e-7));
+            Assert.That(sinusoid[5], Is.EqualTo(5.0).Within(1e-7));
+            Assert.That(sinusoid[10], Is.EqualTo(0.0).Within(1e-7));
+            Assert.That(sinusoid[15], Is.EqualTo(-1.0).Within(1e-7));
+            Assert.That(sinusoid.Length, Is.EqualTo(20));
+        });
+    }
 
-            var sinusoid = new SineBuilder()
-                                    .SetParameter("freq", 0.05f)
-                                    .SuperimposedWith(constants)
-                                    .OfLength(20)
-                                    .SuperimposedWith(constants)    // twice
-                                    .Build();
+    [Test]
+    public void TestBuilderRepeat()
+    {
+        var sinusoid = new SineBuilder()
+                                .SetParameter("freq", 0.05f)
+                                .OfLength(20)
+                                .RepeatedTimes(3)
+                                .Build();
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(sinusoid[0], Is.EqualTo(4.0).Within(1e-7));
-                Assert.That(sinusoid[5], Is.EqualTo(5.0).Within(1e-7));
-                Assert.That(sinusoid[10], Is.EqualTo(0.0).Within(1e-7));
-                Assert.That(sinusoid[15], Is.EqualTo(-1.0).Within(1e-7));
-                Assert.That(sinusoid.Length, Is.EqualTo(20));
-            });
-        }
-
-        [Test]
-        public void TestBuilderRepeat()
+        Assert.Multiple(() =>
         {
-            var sinusoid = new SineBuilder()
-                                    .SetParameter("freq", 0.05f)
-                                    .OfLength(20)
-                                    .RepeatedTimes(3)
-                                    .Build();
+            Assert.That(sinusoid[0], Is.EqualTo(0.0).Within(1e-7));
+            Assert.That(sinusoid[5], Is.EqualTo(1.0).Within(1e-7));
+            Assert.That(sinusoid[25], Is.EqualTo(1.0).Within(1e-7));
+            Assert.That(sinusoid.Length, Is.EqualTo(60));
+        });
+    }
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(sinusoid[0], Is.EqualTo(0.0).Within(1e-7));
-                Assert.That(sinusoid[5], Is.EqualTo(1.0).Within(1e-7));
-                Assert.That(sinusoid[25], Is.EqualTo(1.0).Within(1e-7));
-                Assert.That(sinusoid.Length, Is.EqualTo(60));
-            });
-        }
+    [Test]
+    public void TestBuilderDelay()
+    {
+        var sinusoid = new SineBuilder()
+                                .SetParameter("freq", 0.05f)
+                                .OfLength(20)
+                                .DelayedBy(1)
+                                .Build();
 
-        [Test]
-        public void TestBuilderDelay()
+        Assert.Multiple(() =>
         {
-            var sinusoid = new SineBuilder()
-                                    .SetParameter("freq", 0.05f)
-                                    .OfLength(20)
-                                    .DelayedBy(1)
-                                    .Build();
+            Assert.That(sinusoid[1], Is.EqualTo(0.0).Within(1e-7));
+            Assert.That(sinusoid[6], Is.EqualTo(1.0).Within(1e-7));
+            Assert.That(sinusoid[16], Is.EqualTo(-1.0).Within(1e-7));
+            Assert.That(sinusoid.Length, Is.EqualTo(21));
+        });
+    }
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(sinusoid[1], Is.EqualTo(0.0).Within(1e-7));
-                Assert.That(sinusoid[6], Is.EqualTo(1.0).Within(1e-7));
-                Assert.That(sinusoid[16], Is.EqualTo(-1.0).Within(1e-7));
-                Assert.That(sinusoid.Length, Is.EqualTo(21));
-            });
-        }
+    [Test]
+    public void TestWavetableBuilder()
+    {
+        var wavetable = new[] { 1, 2, 3, 4, 5f };
+        var wt = new WaveTableBuilder(wavetable).OfLength(7);
 
-        [Test]
-        public void TestWavetableBuilder()
-        {
-            var wavetable = new[] { 1, 2, 3, 4, 5f };
-            var wt = new WaveTableBuilder(wavetable).OfLength(7);
+        var result = wt.Build();
 
-            var result = wt.Build();
+        Assert.That(result.Samples, Is.EqualTo([1, 2, 3, 4, 5, 1, 2f]));
+    }
 
-            Assert.That(result.Samples, Is.EqualTo(new[] { 1, 2, 3, 4, 5, 1, 2f }));
-        }
+    [Test]
+    public void TestWavetableBuilderWithFractionalStride()
+    {
+        var wavetable = new[] { 1, 2, 3, 4, 5f };
+        var wt = new WaveTableBuilder(wavetable).SetParameter("stride", 0.25).OfLength(7);
 
-        [Test]
-        public void TestWavetableBuilderWithFractionalStride()
-        {
-            var wavetable = new[] { 1, 2, 3, 4, 5f };
-            var wt = new WaveTableBuilder(wavetable).SetParameter("stride", 0.25).OfLength(7);
+        var result = wt.Build();
 
-            var result = wt.Build();
-
-            Assert.That(result.Samples, Is.EqualTo(new[] { 1, 1.25f, 1.5f, 1.75f, 2, 2.25f, 2.5f }));
-        }
+        Assert.That(result.Samples, Is.EqualTo([1, 1.25f, 1.5f, 1.75f, 2, 2.25f, 2.5f]));
     }
 }
