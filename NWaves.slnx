@@ -1,0 +1,11 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="NWaves.Benchmarks/NWaves.Benchmarks.csproj" />
+  <Project Path="NWaves.Tests/NWaves.Tests.csproj" />
+  <Project Path="NWaves/NWaves.csproj" />
+</Solution>
