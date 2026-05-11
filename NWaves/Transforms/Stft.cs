@@ -71,8 +71,11 @@ namespace NWaves.Transforms
             // pre-allocate memory:
 
             var len = input.Length >= _windowSize ? (input.Length - _windowSize) / _hopSize + 1 : 0;
+            var hasTrailingPartialFrame = input.Length >= _windowSize
+                ? (input.Length - _windowSize) % _hopSize != 0
+                : input.Length > 0;
 
-            var stft = new List<(float[], float[])>(len + 1);
+            var stft = new List<(float[], float[])>(len + (hasTrailingPartialFrame ? 1 : 0));
 
             for (var i = 0; i < len; i++)
             {
@@ -94,6 +97,11 @@ namespace NWaves.Transforms
                 var (re, im) = stft[i];
 
                 _fft.Direct(windowedBuffer, re, im);
+            }
+
+            if (!hasTrailingPartialFrame)
+            {
+                return stft;
             }
 
             // last (incomplete) frame:
