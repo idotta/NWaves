@@ -249,7 +249,6 @@ namespace NWaves.Transforms
             InverseNorm(outRe, outIm);
         }
 
-#if NET50
         /// <summary>
         /// Does Fast Fourier Transform in-place.
         /// </summary>
@@ -433,6 +432,5 @@ namespace NWaves.Transforms
 
             InverseNorm(outRe, outIm);
         }
-#endif
     }
 }

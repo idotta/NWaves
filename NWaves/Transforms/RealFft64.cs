@@ -400,10 +400,9 @@ namespace NWaves.Transforms
             InverseNorm(inRe, inIm, outRe);
         }
 
-#if NET50
         /// <summary>
         /// <para>
-        /// Does Fast Fourier Transform: 
+        /// Does Fast Fourier Transform:
         /// real <paramref name="input"/> -> complex (<paramref name="re"/>, <paramref name="im"/>).
         /// </para>
         /// </summary>
@@ -650,6 +649,5 @@ namespace NWaves.Transforms
                 output[k++] = _im[i] / _fftSize;
             }
         }
-#endif
     }
 }
