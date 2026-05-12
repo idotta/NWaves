@@ -30,7 +30,7 @@ public class KarplusStrongDrumBuilder : KarplusStrongBuilder
     /// Constructs <see cref="KarplusStrongDrumBuilder"/> from array of <paramref name="samples"/>.
     /// </summary>
     /// <param name="samples">Array of samples</param>
-    public KarplusStrongDrumBuilder(float[] samples) : base(samples)
+    public KarplusStrongDrumBuilder(float[]? samples) : base(samples)
     {
         Init();
     }

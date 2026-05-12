@@ -29,9 +29,9 @@ public class MultiFeatureOptions : FeatureExtractorOptions
     [DataMember]
     public int FftSize { get; set; }
     [DataMember]
-    public float[] Frequencies { get; set; }
+    public float[]? Frequencies { get; set; }
     [DataMember]
-    public (double, double, double)[] FrequencyBands { get; set; }
+    public (double, double, double)[]? FrequencyBands { get; set; }
     [DataMember]
-    public Dictionary<string, object> Parameters { get; set; }
+    public Dictionary<string, object>? Parameters { get; set; }
 }

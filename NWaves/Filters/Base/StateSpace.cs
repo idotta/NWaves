@@ -8,20 +8,20 @@ public class StateSpace
     /// <summary>
     /// Gets or sets state matrix.
     /// </summary>
-    public double[][] A { get; set; }
+    public double[][] A { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets input-to-state matrix.
     /// </summary>
-    public double[] B { get; set; }
+    public double[] B { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets state-to-output matrix.
     /// </summary>
-    public double[] C { get; set; }
+    public double[] C { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets feedthrough matrix.
     /// </summary>
-    public double[] D { get; set; }
+    public double[] D { get; set; } = null!;
 }

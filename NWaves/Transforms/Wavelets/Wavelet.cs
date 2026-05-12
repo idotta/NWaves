@@ -13,7 +13,7 @@ public class Wavelet
     /// <summary>
     /// Gets wavelet name.
     /// </summary>
-    public string Name { get; protected set; }
+    public string Name { get; protected set; } = null!;
 
     /// <summary>
     /// Gets wavelet length.
@@ -23,22 +23,22 @@ public class Wavelet
     /// <summary>
     /// Gets LP coefficients for decomposition.
     /// </summary>
-    public float[] LoD { get; protected set; }
+    public float[] LoD { get; protected set; } = null!;
 
     /// <summary>
     /// Gets HP coefficients for decomposition.
     /// </summary>
-    public float[] HiD { get; protected set; }
+    public float[] HiD { get; protected set; } = null!;
 
     /// <summary>
     /// Gets LP coefficients for reconstruction.
     /// </summary>
-    public float[] LoR { get; protected set; }
+    public float[] LoR { get; protected set; } = null!;
 
     /// <summary>
     /// Gets HP coefficients for reconstruction.
     /// </summary>
-    public float[] HiR { get; protected set; }
+    public float[] HiR { get; protected set; } = null!;
 
     /// <summary>
     /// Constructs wavelet from <paramref name="waveletFamily"/> and number of <paramref name="taps"/>.

@@ -54,7 +54,7 @@ public class DiscreteSignal
     /// <param name="samplingRate">Sampling rate</param>
     /// <param name="samples">Collection of samples</param>
     public DiscreteSignal(int samplingRate, IEnumerable<float> samples)
-        : this(samplingRate, samples?.ToArray())
+        : this(samplingRate, samples.ToArray())
     {
     }
 

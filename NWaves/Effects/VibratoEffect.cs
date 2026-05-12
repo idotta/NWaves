@@ -60,7 +60,7 @@ public class VibratoEffect : AudioEffect
             _lfo.SetParameter("min", 0.0).SetParameter("max", 1.0);
         }
     }
-    private SignalBuilder _lfo;
+    private SignalBuilder _lfo = null!;
 
     /// <summary>
     /// Gets or sets interpolation mode.

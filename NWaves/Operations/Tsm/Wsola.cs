@@ -44,15 +44,14 @@ public class Wsola : IFilter
     private readonly bool _userParameters;
 
     /// <summary>
-    /// Internal convolver
-    /// (will be used for evaluating auto-correlation if the window size is too big).
+    /// Internal convolver (only used when the window size is large enough).
     /// </summary>
-    private Convolver _convolver;
+    private Convolver? _convolver;
 
     /// <summary>
-    /// Cross-correlation signal.
+    /// Cross-correlation signal. Allocated alongside <see cref="_convolver"/>.
     /// </summary>
-    private float[] _cc;
+    private float[]? _cc;
 
     /// <summary>
     /// Constructs <see cref="Wsola"/> TSM processor.
@@ -227,11 +226,11 @@ public class Wsola : IFilter
         // for very large window sizes better use FFT convolution:
         else
         {
-            _convolver.CrossCorrelate(current, prev, _cc);
+            _convolver.CrossCorrelate(current, prev, _cc!);
 
             for (int i = prev.Length - 1, j = 0; i < prev.Length + _maxDelta - 1; i++, j++)
             {
-                if (_cc[i] > maxCorrelation)
+                if (_cc![i] > maxCorrelation)
                 {
                     maxCorrelation = _cc[i];
                     optimalShift = j;

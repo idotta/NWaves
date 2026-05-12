@@ -1,5 +1,6 @@
 ﻿using NWaves.Utils;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace NWaves.Filters.Fda;
@@ -140,6 +141,7 @@ public class Remez
     /// <param name="desired">Array of desired response values</param>
     /// <param name="weights">Array of weights</param>
     /// <param name="gridDensity">Grid density</param>
+    [MemberNotNull(nameof(_grid), nameof(_weights), nameof(_desired))]
     private void MakeGrid(double[] desired, double[] weights, int gridDensity = 16)
     {
         var gridSize = 0;

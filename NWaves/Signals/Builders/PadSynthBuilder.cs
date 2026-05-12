@@ -24,7 +24,7 @@ namespace NWaves.Signals.Builders;
 /// </summary>
 public class PadSynthBuilder : WaveTableBuilder
 {
-    private readonly Random _rand = new Random();
+    private readonly Random _rand = new();
 
     /// <summary>
     /// Frequency of the note.
@@ -32,9 +32,9 @@ public class PadSynthBuilder : WaveTableBuilder
     protected float _frequency = 440;/*Hz*/
 
     /// <summary>
-    /// Amplitudes of harmonics.
+    /// Amplitudes of harmonics. Null until <see cref="SetAmplitudes(float[])"/> is called.
     /// </summary>
-    protected float[] _amplitudes;
+    protected float[]? _amplitudes;
 
     /// <summary>
     /// Bandwidth of the first harmonic.
@@ -47,24 +47,24 @@ public class PadSynthBuilder : WaveTableBuilder
     protected float _bwScale = 1.25f;
 
     /// <summary>
-    /// Internal FFT transformer.
+    /// Internal FFT transformer. Null until <see cref="SetFftSize(int)"/> is called.
     /// </summary>
-    protected RealFft _fft;
-    
+    protected RealFft? _fft;
+
     /// <summary>
     /// FFT size.
     /// </summary>
     protected int _fftSize = 2048;
-    
-    /// <summary>
-    /// Internal buffer for real parts of spectrum.
-    /// </summary>
-    protected float[] _re;
 
     /// <summary>
-    /// Internal buffer for imaginary parts of spectrum. 
+    /// Internal buffer for real parts of spectrum. Null until <see cref="SetFftSize(int)"/> is called.
     /// </summary>
-    protected float[] _im;
+    protected float[]? _re;
+
+    /// <summary>
+    /// Internal buffer for imaginary parts of spectrum. Null until <see cref="SetFftSize(int)"/> is called.
+    /// </summary>
+    protected float[]? _im;
 
     /// <summary>
     /// Constructs <see cref="PadSynthBuilder"/>.
@@ -132,7 +132,7 @@ public class PadSynthBuilder : WaveTableBuilder
     /// Sets amplitudes of harmonics.
     /// </summary>
     /// <param name="amplitudes">Array of amplitudes</param>
-    public PadSynthBuilder SetAmplitudes(float[] amplitudes)
+    public PadSynthBuilder SetAmplitudes(float[]? amplitudes)
     {
         _amplitudes = amplitudes;
         GenerateWavetable();
@@ -145,7 +145,7 @@ public class PadSynthBuilder : WaveTableBuilder
     /// </summary>
     protected void GenerateWavetable()
     {
-        if (_fft is null || _amplitudes is null || _frequency <= 0)
+        if (_fft is null || _amplitudes is null || _re is null || _im is null || _frequency <= 0)
         {
             return;
         }

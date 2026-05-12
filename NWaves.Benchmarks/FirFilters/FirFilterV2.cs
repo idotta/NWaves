@@ -30,7 +30,7 @@ public class FirFilterV2 : LtiFilter
     /// <summary>
     /// Transfer function (created lazily or set specifically if needed)
     /// </summary>
-    protected TransferFunction _tf;
+    protected TransferFunction? _tf;
     public override TransferFunction Tf
     {
         get => _tf ?? new TransferFunction(_kernel.ToDoubles(), [1.0]);
@@ -46,7 +46,7 @@ public class FirFilterV2 : LtiFilter
     /// <summary>
     /// Internal buffer for delay line
     /// </summary>
-    protected float[] _delayLine;
+    protected float[] _delayLine = null!;
 
     /// <summary>
     /// Current offset in delay line

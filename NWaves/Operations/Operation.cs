@@ -112,7 +112,7 @@ public static class Operation
     /// <param name="signal">Signal</param>
     /// <param name="factor">Interpolation factor (e.g. factor=2 if 8000 Hz -> 16000 Hz)</param>
     /// <param name="filter">Lowpass anti-aliasing filter</param>
-    public static DiscreteSignal Interpolate(DiscreteSignal signal, int factor, FirFilter filter = null)
+    public static DiscreteSignal Interpolate(DiscreteSignal signal, int factor, FirFilter? filter = null)
     {
         return new Resampler().Interpolate(signal, factor, filter);
     }
@@ -123,7 +123,7 @@ public static class Operation
     /// <param name="signal">Signal</param>
     /// <param name="factor">Decimation factor (e.g. factor=2 if 16000 Hz -> 8000 Hz)</param>
     /// <param name="filter">Lowpass anti-aliasing filter</param>
-    public static DiscreteSignal Decimate(DiscreteSignal signal, int factor, FirFilter filter = null)
+    public static DiscreteSignal Decimate(DiscreteSignal signal, int factor, FirFilter? filter = null)
     {
         return new Resampler().Decimate(signal, factor, filter);
     }
@@ -135,7 +135,7 @@ public static class Operation
     /// <param name="newSamplingRate">Desired sampling rate</param>
     /// <param name="filter">Lowpass anti-aliasing filter</param>
     /// <param name="order">Order</param>
-    public static DiscreteSignal Resample(DiscreteSignal signal, int newSamplingRate, FirFilter filter = null, int order = 15)
+    public static DiscreteSignal Resample(DiscreteSignal signal, int newSamplingRate, FirFilter? filter = null, int order = 15)
     {
         return new Resampler().Resample(signal, newSamplingRate, filter, order);
     }
@@ -147,7 +147,7 @@ public static class Operation
     /// <param name="up">Interpolation factor</param>
     /// <param name="down">Decimation factor</param>
     /// <param name="filter">Lowpass anti-aliasing filter</param>
-    public static DiscreteSignal ResampleUpDown(DiscreteSignal signal, int up, int down, FirFilter filter = null)
+    public static DiscreteSignal ResampleUpDown(DiscreteSignal signal, int up, int down, FirFilter? filter = null)
     {
         return new Resampler().ResampleUpDown(signal, up, down, filter);
     }

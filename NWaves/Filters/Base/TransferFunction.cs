@@ -34,22 +34,22 @@ public class TransferFunction
     /// <summary>
     /// Zeros.
     /// </summary>
-    protected Complex[] _zeros;
+    protected Complex[]? _zeros;
 
     /// <summary>
     /// Poles.
     /// </summary>
-    protected Complex[] _poles;
+    protected Complex[]? _poles;
 
     /// <summary>
     /// Gets zeros ('z' in 'zpk' notation).
     /// </summary>
-    public Complex[] Zeros => _zeros ?? TfToZp(Numerator, CalculateZpIterations);
+    public Complex[]? Zeros => _zeros ?? TfToZp(Numerator, CalculateZpIterations);
 
     /// <summary>
     /// Gets poles ('p' in 'zpk' notation).
     /// </summary>
-    public Complex[] Poles => _poles ?? TfToZp(Denominator, CalculateZpIterations);
+    public Complex[]? Poles => _poles ?? TfToZp(Denominator, CalculateZpIterations);
 
     /// <summary>
     /// Gets gain ('k' in 'zpk' notation).
@@ -61,7 +61,7 @@ public class TransferFunction
     /// </summary>
     /// <param name="numerator">Numerator of transfer function</param>
     /// <param name="denominator">Denominator of transfer function</param>
-    public TransferFunction(double[] numerator, double[] denominator = null)
+    public TransferFunction(double[] numerator, double[]? denominator = null)
     {
         Numerator = numerator;
         Denominator = denominator ?? [1.0];
@@ -73,7 +73,7 @@ public class TransferFunction
     /// <param name="zeros">Zeros</param>
     /// <param name="poles">Poles</param>
     /// <param name="gain">Gain</param>
-    public TransferFunction(Complex[] zeros, Complex[] poles, double gain = 1)
+    public TransferFunction(Complex[]? zeros, Complex[]? poles, double gain = 1)
     {
         _zeros = zeros;
         _poles = poles;
@@ -445,7 +445,7 @@ public class TransferFunction
     /// </summary>
     /// <param name="re">Real parts of complex zeros (poles)</param>
     /// <param name="im">Imaginary parts of complex zeros (poles)</param>
-    public static double[] ZpToTf(double[] re, double[] im = null)
+    public static double[] ZpToTf(double[] re, double[]? im = null)
     {
         if (im is null)
         {
@@ -460,7 +460,7 @@ public class TransferFunction
     /// </summary>
     /// <param name="numeratorOrDenominator">Numerator or denominator (polynomial)</param>
     /// <param name="maxIterations">Max number of iterations for calculating zeros/poles (roots of polynomials). By default, 25000.</param>
-    public static Complex[] TfToZp(double[] numeratorOrDenominator, int maxIterations = MathUtils.PolyRootsIterations)
+    public static Complex[]? TfToZp(double[] numeratorOrDenominator, int maxIterations = MathUtils.PolyRootsIterations)
     {
         if (numeratorOrDenominator.Length <= 1)
         {
@@ -519,14 +519,15 @@ public class TransferFunction
     /// <param name="delimiter">Delimiter</param>
     public static TransferFunction FromCsv(Stream stream, char delimiter = ',')
     {
+        ArgumentNullException.ThrowIfNull(stream);
         using var reader = new StreamReader(stream);
         var content = reader.ReadLine();
-        var numerator = content.Split(delimiter)
+        var numerator = content!.Split(delimiter)
                                .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
                                .ToArray();
 
         content = reader.ReadLine();
-        var denominator = content.Split(delimiter)
+        var denominator = content!.Split(delimiter)
                                  .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
                                  .ToArray();
 

@@ -83,9 +83,9 @@ public static class FeaturePostProcessing
     /// <param name="next">Sequence of <paramref name="N"/> feature vectors that will be appended to <paramref name="vectors"/> for computations</param>
     /// <param name="includeDeltaDelta">Should delta-delta features be computed</param>
     /// <param name="N">Number of feature vectors before and after input <paramref name="vectors"/> for computations</param>
-    public static void AddDeltas(IList<float[]> vectors, 
-                                 IList<float[]> previous = null,
-                                 IList<float[]> next = null,
+    public static void AddDeltas(IList<float[]> vectors,
+                                 IList<float[]>? previous = null,
+                                 IList<float[]>? next = null,
                                  bool includeDeltaDelta = true,
                                  int N = 2)
     {

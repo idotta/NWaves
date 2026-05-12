@@ -312,7 +312,7 @@ public class PnccExtractor : FeatureExtractor
 
         // 3.5) mean power normalization
 
-        var centralSpectrum = _ringBuffer.CentralSpectrum;
+        var centralSpectrum = _ringBuffer.CentralSpectrum!;
 
         var sumPower = 0.0f;
         for (var j = 0; j < _smoothedSpectrum.Length; j++)
@@ -388,7 +388,7 @@ public class PnccExtractor : FeatureExtractor
         protected int _capacity;
         protected int _current;
 
-        public float[] CentralSpectrum;
+        public float[]? CentralSpectrum;
         public float[] AverageSpectrum;
 
         /// <summary>

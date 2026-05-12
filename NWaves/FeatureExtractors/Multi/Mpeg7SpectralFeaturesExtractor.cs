@@ -60,14 +60,14 @@ public class Mpeg7SpectralFeaturesExtractor : FeatureExtractor
     protected readonly float[] _frequencies;
 
     /// <summary>
-    /// Internal buffer for harmonic peak frequencies (optional).
+    /// Internal buffer for harmonic peak frequencies (optional). Assigned by <see cref="IncludeHarmonicFeatures"/>.
     /// </summary>
-    protected float[] _peakFrequencies;
+    protected float[]? _peakFrequencies;
 
     /// <summary>
-    /// Internal buffer for spectral positions of harmonic peaks (optional).
+    /// Internal buffer for spectral positions of harmonic peaks (optional). Assigned by <see cref="IncludeHarmonicFeatures"/>.
     /// </summary>
-    protected int[] _peaks;
+    protected int[]? _peaks;
 
     /// <summary>
     /// Extractor functions.
@@ -77,12 +77,12 @@ public class Mpeg7SpectralFeaturesExtractor : FeatureExtractor
     /// <summary>
     /// Extractor parameters.
     /// </summary>
-    protected readonly Dictionary<string, object> _parameters;
+    protected readonly Dictionary<string, object>? _parameters;
 
     /// <summary>
-    /// Harmonic extractor functions (optional).
+    /// Harmonic extractor functions (optional). Assigned by <see cref="IncludeHarmonicFeatures"/>.
     /// </summary>
-    protected List<Func<float[], int[], float[], float>> _harmonicExtractors;
+    protected List<Func<float[], int[], float[], float>>? _harmonicExtractors;
 
     /// <summary>
     /// FFT transformer.
@@ -100,14 +100,14 @@ public class Mpeg7SpectralFeaturesExtractor : FeatureExtractor
     protected readonly float[] _mappedSpectrum;
 
     /// <summary>
-    /// Pitch estimator function (optional).
+    /// Pitch estimator function (optional). Assigned by <see cref="IncludeHarmonicFeatures"/>.
     /// </summary>
-    protected Func<float[], float> _pitchEstimator;
+    protected Func<float[], float>? _pitchEstimator;
 
     /// <summary>
-    /// Array of precomputed pitches (optional).
+    /// Array of precomputed pitches (optional). Assigned by <see cref="SetPitchTrack"/>.
     /// </summary>
-    protected float[] _pitchTrack;
+    protected float[]? _pitchTrack;
 
     /// <summary>
     /// Current position in pitch track.
@@ -115,9 +115,9 @@ public class Mpeg7SpectralFeaturesExtractor : FeatureExtractor
     protected int _pitchPos;
 
     /// <summary>
-    /// Harmonic peaks detector function (optional).
+    /// Harmonic peaks detector function (optional). Assigned by <see cref="IncludeHarmonicFeatures"/>.
     /// </summary>
-    protected Action<float[], int[], float[], int, float> _peaksDetector;
+    protected Action<float[], int[], float[], int, float>? _peaksDetector;
 
     /// <summary>
     /// Constructs extractor from configuration <paramref name="options"/>.
@@ -248,8 +248,8 @@ public class Mpeg7SpectralFeaturesExtractor : FeatureExtractor
     /// <param name="highPitch">Upper frequency of expected pitch range</param>
     public void IncludeHarmonicFeatures(string featureList,
                                         int peakCount = 10,
-                                        Func<float[], float> pitchEstimator = null,
-                                        Action<float[], int[], float[], int, float> peaksDetector = null,
+                                        Func<float[], float>? pitchEstimator = null,
+                                        Action<float[], int[], float[], int, float>? peaksDetector = null,
                                         float lowPitch = 80/*Hz*/,
                                         float highPitch = 400/*Hz*/)
     {
@@ -392,14 +392,14 @@ public class Mpeg7SpectralFeaturesExtractor : FeatureExtractor
 
         if (_harmonicExtractors != null)
         {
-            var pitch = _pitchTrack is null ? _pitchEstimator(_spectrum) : _pitchTrack[_pitchPos++];
+            var pitch = _pitchTrack is null ? _pitchEstimator!(_spectrum) : _pitchTrack[_pitchPos++];
 
-            _peaksDetector(_spectrum, _peaks, _peakFrequencies, SamplingRate, pitch);
+            _peaksDetector!(_spectrum, _peaks!, _peakFrequencies!, SamplingRate, pitch);
 
             var offset = _extractors.Count;
             for (var j = 0; j < _harmonicExtractors.Count; j++)
             {
-                features[j + offset] = _harmonicExtractors[j](_spectrum, _peaks, _peakFrequencies);
+                features[j + offset] = _harmonicExtractors[j](_spectrum, _peaks!, _peakFrequencies!);
             }
         }
     }
@@ -415,7 +415,7 @@ public class Mpeg7SpectralFeaturesExtractor : FeatureExtractor
     /// <para>Creates thread-safe copy of the extractor for parallel computations.</para>
     /// <para>Returns null if the extractor does not support parallelization.</para>
     /// </summary>
-    public override FeatureExtractor ParallelCopy()
+    public override FeatureExtractor? ParallelCopy()
     {
         if (!IsParallelizable())
         {
@@ -445,7 +445,7 @@ public class Mpeg7SpectralFeaturesExtractor : FeatureExtractor
         if (_harmonicExtractors != null)
         {
             var harmonicFeatureSet = string.Join(",", FeatureDescriptions.Skip(_extractors.Count));
-            copy.IncludeHarmonicFeatures(harmonicFeatureSet, _peaks.Length, _pitchEstimator);
+            copy.IncludeHarmonicFeatures(harmonicFeatureSet, _peaks!.Length, _pitchEstimator);
         }
 
         return copy;

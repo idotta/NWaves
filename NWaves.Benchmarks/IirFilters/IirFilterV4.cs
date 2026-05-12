@@ -56,7 +56,7 @@ public class IirFilterV4 : LtiFilter
     /// <summary>
     /// Transfer function (created lazily or set specifically if needed)
     /// </summary>
-    protected TransferFunction _tf;
+    protected TransferFunction? _tf;
     public override TransferFunction Tf
     {
         get => _tf ?? new TransferFunction(_b.Take(_numeratorSize).ToDoubles(), _a.Take(_denominatorSize).ToDoubles());
@@ -71,8 +71,8 @@ public class IirFilterV4 : LtiFilter
     /// <summary>
     /// Internal buffers for delay lines
     /// </summary>
-    protected float[] _delayLineA;
-    protected float[] _delayLineB;
+    protected float[] _delayLineA = null!;
+    protected float[] _delayLineB = null!;
 
     /// <summary>
     /// Current offsets in delay lines

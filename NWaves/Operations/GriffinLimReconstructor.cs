@@ -75,7 +75,7 @@ public class GriffinLimReconstructor
     /// Does one iteration of reconstruction and returns reconstructed signal at current step.
     /// </summary>
     /// <param name="signal">Signal reconstructed at previous iteration</param>
-    public float[] Iterate(float[] signal = null)
+    public float[] Iterate(float[]? signal = null)
     {
         var magPhase = new MagnitudePhaseList() { Magnitudes = _magnitudes };
 

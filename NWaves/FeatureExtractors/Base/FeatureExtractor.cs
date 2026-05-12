@@ -88,9 +88,9 @@ public abstract class FeatureExtractor : IFeatureExtractor, IParallelFeatureExtr
     protected readonly WindowType _window;
 
     /// <summary>
-    /// Window samples.
+    /// Window samples. Null when <see cref="_window"/> is <see cref="WindowType.Rectangular"/>.
     /// </summary>
-    protected readonly float[] _windowSamples;
+    protected readonly float[]? _windowSamples;
 
     /// <summary>
     /// Constructs extractor from configuration <paramref name="options"/>.
@@ -318,7 +318,7 @@ public abstract class FeatureExtractor : IFeatureExtractor, IParallelFeatureExtr
     /// <para>Creates thread-safe copy of the extractor for parallel computations.</para>
     /// <para>Returns null if the extractor does not support parallelization.</para>
     /// </summary>
-    public virtual FeatureExtractor ParallelCopy() => null;
+    public virtual FeatureExtractor? ParallelCopy() => null;
 
     /// <summary>
     /// <para>Computes parallelly feature vectors from <paramref name="samples"/>.</para>
@@ -347,7 +347,7 @@ public abstract class FeatureExtractor : IFeatureExtractor, IParallelFeatureExtr
         extractors[0] = this;
         for (var i = 1; i < threadCount; i++)
         {
-            extractors[i] = ParallelCopy();
+            extractors[i] = ParallelCopy()!;
         }
 
         // ============== carefully define the sample positions for merging ===============

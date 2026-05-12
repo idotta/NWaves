@@ -130,7 +130,7 @@ public static partial class DesignFilter
     /// <param name="frequency">Normalized cutoff frequency in range [0..0.5]</param>
     /// <param name="poles">Analog prototype poles</param>
     /// <param name="zeros">Analog prototype zeros</param>
-    public static TransferFunction IirLpTf(double frequency, Complex[] poles, Complex[] zeros = null)
+    public static TransferFunction IirLpTf(double frequency, Complex[] poles, Complex[]? zeros = null)
     {
         Guard.AgainstInvalidRange(frequency, 0, 0.5, "Cutoff frequency");
 
@@ -196,7 +196,7 @@ public static partial class DesignFilter
     /// <param name="frequency">Normalized cutoff frequency in range [0..0.5]</param>
     /// <param name="poles">Analog prototype poles</param>
     /// <param name="zeros">Analog prototype zeros</param>
-    public static TransferFunction IirHpTf(double frequency, Complex[] poles, Complex[] zeros = null)
+    public static TransferFunction IirHpTf(double frequency, Complex[] poles, Complex[]? zeros = null)
     {
         Guard.AgainstInvalidRange(frequency, 0, 0.5, "Cutoff frequency");
 
@@ -263,7 +263,7 @@ public static partial class DesignFilter
     /// <param name="frequencyHigh">Normalized high cutoff frequency in range [0..0.5]</param>
     /// <param name="poles">Analog prototype poles</param>
     /// <param name="zeros">Analog prototype zeros</param>
-    public static TransferFunction IirBpTf(double frequencyLow, double frequencyHigh, Complex[] poles, Complex[] zeros = null)
+    public static TransferFunction IirBpTf(double frequencyLow, double frequencyHigh, Complex[] poles, Complex[]? zeros = null)
     {
         Guard.AgainstInvalidRange(frequencyLow, 0, 0.5, "lower frequency");
         Guard.AgainstInvalidRange(frequencyHigh, 0, 0.5, "upper frequency");
@@ -354,7 +354,7 @@ public static partial class DesignFilter
     /// <param name="frequencyHigh">Normalized high cutoff frequency in range [0..0.5]</param>
     /// <param name="poles">Analog prototype poles</param>
     /// <param name="zeros">Analog prototype zeros</param>
-    public static TransferFunction IirBsTf(double frequencyLow, double frequencyHigh, Complex[] poles, Complex[] zeros = null)
+    public static TransferFunction IirBsTf(double frequencyLow, double frequencyHigh, Complex[] poles, Complex[]? zeros = null)
     {
         Guard.AgainstInvalidRange(frequencyLow, 0, 0.5, "lower frequency");
         Guard.AgainstInvalidRange(frequencyHigh, 0, 0.5, "upper frequency");
@@ -471,6 +471,11 @@ public static partial class DesignFilter
     /// <param name="tf">Transfer function</param>
     public static TransferFunction[] TfToSos(TransferFunction tf)
     {
+        if (tf.Zeros is null || tf.Poles is null)
+        {
+            throw new ArgumentException("Transfer function must have non-trivial numerator and denominator (degree >= 1) for second-order section decomposition.", nameof(tf));
+        }
+
         var zeros = tf.Zeros.ToList();
         var poles = tf.Poles.ToList();
 

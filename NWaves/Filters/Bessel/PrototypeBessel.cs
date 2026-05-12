@@ -27,11 +27,16 @@ public static class PrototypeBessel
     /// <param name="order">Filter order</param>
     public static Complex[] Poles(int order)
     {
+        if (order < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(order), order, "Filter order must be at least 1.");
+        }
+
         var a = Enumerable.Range(0, order + 1)
                           .Select(i => Reverse(order - i, order))
                           .ToArray();
 
-        var poles = MathUtils.PolynomialRoots(a);
+        var poles = MathUtils.PolynomialRoots(a)!;
 
         // ...and normalize
 

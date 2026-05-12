@@ -45,7 +45,7 @@ public class IirFilter : LtiFilter
     /// <summary>
     /// Transfer function.
     /// </summary>
-    protected TransferFunction _tf;
+    protected TransferFunction? _tf;
 
     /// <summary>
     /// Gets transfer function.

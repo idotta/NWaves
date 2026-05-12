@@ -272,7 +272,7 @@ public static partial class DesignFilter
     /// <param name="fftSize">FFT size</param>
     /// <param name="window">Window</param>
     public static double[] Fir(int order,
-                               double[] frequencies,
+                               double[]? frequencies,
                                double[] gain,
                                int fftSize = 0,
                                WindowType window = WindowType.Hamming)

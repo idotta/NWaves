@@ -7,7 +7,7 @@ namespace NWaves.Tests.FeaturesTest;
 [TestFixture]
 public class TestFeaturePostProcessing
 {
-    List<float[]> _feats;
+    List<float[]> _feats = null!;
 
     [SetUp]
     public void InitFeatureVectors()

@@ -30,7 +30,7 @@ public class TimeDomainFeaturesExtractor : FeatureExtractor
     /// <summary>
     /// Parameters.
     /// </summary>
-    protected readonly Dictionary<string, object> _parameters;
+    protected readonly Dictionary<string, object>? _parameters;
 
     /// <summary>
     /// Constructs extractor from configuration <paramref name="options"/>.

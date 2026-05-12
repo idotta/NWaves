@@ -49,9 +49,9 @@ public class PlpExtractor : FeatureExtractor
     protected readonly double _rasta;
 
     /// <summary>
-    /// RASTA filters for each critical band.
+    /// RASTA filters for each critical band. Null when RASTA is disabled.
     /// </summary>
-    protected readonly RastaFilter[] _rastaFilters;
+    protected readonly RastaFilter[]? _rastaFilters;
 
     /// <summary>
     /// Size of liftering window.
@@ -59,9 +59,9 @@ public class PlpExtractor : FeatureExtractor
     protected readonly int _lifterSize;
 
     /// <summary>
-    /// Liftering window coefficients.
+    /// Liftering window coefficients. Null when liftering disabled (<see cref="_lifterSize"/> is 0).
     /// </summary>
-    protected readonly float[] _lifterCoeffs;
+    protected readonly float[]? _lifterCoeffs;
 
     /// <summary>
     /// Should the first PLP coefficient be replaced with LOG(energy).
@@ -284,7 +284,7 @@ public class PlpExtractor : FeatureExtractor
             {
                 var log = (float)Math.Log(_bandSpectrum[k] + float.Epsilon);
 
-                log = _rastaFilters[k].Process(log);
+                log = _rastaFilters![k].Process(log);
 
                 _bandSpectrum[k] = (float)Math.Exp(log);
             }
@@ -366,7 +366,7 @@ public class PlpExtractor : FeatureExtractor
     /// <para>Creates thread-safe copy of the extractor for parallel computations.</para>
     /// <para>Returns null if the extractor does not support parallelization.</para>
     /// </summary>
-    public override FeatureExtractor ParallelCopy()
+    public override FeatureExtractor? ParallelCopy()
     {
         if (!IsParallelizable())
         {

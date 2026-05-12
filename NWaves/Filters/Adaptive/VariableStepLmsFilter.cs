@@ -17,7 +17,7 @@ public class VariableStepLmsFilter : AdaptiveFilter
     /// <param name="order">Filter order</param>
     /// <param name="mu">Mu</param>
     /// <param name="leakage">Leakage</param>
-    public VariableStepLmsFilter(int order, float[] mu = null, float leakage = 0) : base(order)
+    public VariableStepLmsFilter(int order, float[]? mu = null, float leakage = 0) : base(order)
     {
         _mu = mu ?? Enumerable.Repeat(0.75f, order).ToArray();
         Guard.AgainstInequality(order, _mu.Length, "Filter order", "Steps array size");

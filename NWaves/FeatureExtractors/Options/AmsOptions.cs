@@ -32,7 +32,7 @@ public class AmsOptions : FeatureExtractorOptions
     [DataMember]
     public int FftSize { get; set; }
     [DataMember]
-    public IEnumerable<float[]> Featuregram { get; set; }
+    public IEnumerable<float[]>? Featuregram { get; set; }
     [DataMember]
-    public float[][] FilterBank { get; set; }
+    public float[][]? FilterBank { get; set; }
 }

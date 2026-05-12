@@ -16,9 +16,9 @@ namespace NWaves.Signals.Builders;
 public class WaveTableBuilder : SignalBuilder
 {
     /// <summary>
-    /// Wave table samples.
+    /// Wave table samples. May be unset until <see cref="SignalBuilder.SampledAt(int)"/> is called by some derived builders.
     /// </summary>
-    protected float[] _samples;
+    protected float[] _samples = null!;
 
     /// <summary>
     /// Stride.
@@ -35,9 +35,9 @@ public class WaveTableBuilder : SignalBuilder
     /// Constructs <see cref="WaveTableBuilder"/> from <paramref name="samples"/>.
     /// </summary>
     /// <param name="samples">Wave table samples</param>
-    public WaveTableBuilder(float[] samples)
+    public WaveTableBuilder(float[]? samples)
     {
-        _samples = samples;
+        _samples = samples!;
 
         ParameterSetters = new Dictionary<string, Action<double>>
         {

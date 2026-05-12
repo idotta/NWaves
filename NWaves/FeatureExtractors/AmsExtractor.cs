@@ -28,31 +28,32 @@ public class AmsExtractor : FeatureExtractor
     public override List<string> FeatureDescriptions { get; }
 
     /// <summary>
-    /// The "featuregram": the sequence of feature vectors. 
-    /// If this sequence is given, then <see cref="AmsExtractor"/> computes 
+    /// The "featuregram": the sequence of feature vectors.
+    /// If this sequence is given, then <see cref="AmsExtractor"/> computes
     /// modulation spectral coefficients from sequences in each 'feature channel'.
+    /// Mutually exclusive with <see cref="_filterbank"/> path.
     /// </summary>
-    protected readonly float[][] _featuregram;
+    protected readonly float[][]? _featuregram;
 
     /// <summary>
-    /// Filterbank matrix of dimension [filterCount * (fftSize/2 + 1)].
+    /// Filterbank matrix of dimension [filterCount * (fftSize/2 + 1)]. Unset when <see cref="_featuregram"/> is supplied.
     /// </summary>
-    protected readonly float[][] _filterbank;
+    protected readonly float[][] _filterbank = null!;
 
     /// <summary>
     /// Gets filterbank matrix of dimension [filterCount * (fftSize/2 + 1)].
     /// </summary>
     public float[][] Filterbank => _filterbank;
-    
+
     /// <summary>
-    /// Signal envelopes in different frequency bands.
+    /// Signal envelopes in different frequency bands. Populated during <see cref="ComputeFrom(float[], int, int)"/>.
     /// </summary>
-    protected float[][] _envelopes;
+    protected float[][]? _envelopes;
 
     /// <summary>
     /// Gets signal envelopes in different frequency bands.
     /// </summary>
-    public float[][] Envelopes => _envelopes;
+    public float[][]? Envelopes => _envelopes;
 
     /// <summary>
     /// Size of FFT.
@@ -60,9 +61,9 @@ public class AmsExtractor : FeatureExtractor
     protected readonly int _fftSize;
 
     /// <summary>
-    /// FFT transformer.
+    /// FFT transformer. Unset when <see cref="_featuregram"/> is supplied.
     /// </summary>
-    protected readonly RealFft _fft;
+    protected readonly RealFft _fft = null!;
 
     /// <summary>
     /// FFT transformer for modulation spectrum.
@@ -80,19 +81,19 @@ public class AmsExtractor : FeatureExtractor
     protected readonly int _modulationHopSize;
 
     /// <summary>
-    /// Internal buffer for a signal block at each step.
+    /// Internal buffer for a signal block at each step. Unset when <see cref="_featuregram"/> is supplied.
     /// </summary>
-    protected readonly float[] _block;
+    protected readonly float[] _block = null!;
 
     /// <summary>
-    /// Internal buffer for a signal spectrum at each step.
+    /// Internal buffer for a signal spectrum at each step. Unset when <see cref="_featuregram"/> is supplied.
     /// </summary>
-    protected readonly float[] _spectrum;
+    protected readonly float[] _spectrum = null!;
 
     /// <summary>
-    /// Internal buffer for filtered spectrum.
+    /// Internal buffer for filtered spectrum. Unset when <see cref="_featuregram"/> is supplied.
     /// </summary>
-    protected readonly float[] _filteredSpectrum;
+    protected readonly float[] _filteredSpectrum = null!;
 
     /// <summary>
     /// Internal buffer for modulation spectrum analysis.
@@ -232,7 +233,7 @@ public class AmsExtractor : FeatureExtractor
 
                 if (_window != WindowType.Rectangular)
                 {
-                    _block.ApplyWindow(_windowSamples);
+                    _block.ApplyWindow(_windowSamples!);
                 }
 
                 // 2) calculate power spectrum
@@ -326,7 +327,7 @@ public class AmsExtractor : FeatureExtractor
     /// <param name="featureVector">AMS feature vector</param>
     public float[][] MakeSpectrum2D(float[] featureVector)
     {
-        var length = _filterbank?.Length ?? _featuregram[0].Length;
+        var length = _featuregram is null ? _filterbank.Length : _featuregram[0].Length;
 
         var spectrum = new float[length][];
         var spectrumSize = _modulationFftSize / 2 + 1;
@@ -349,7 +350,7 @@ public class AmsExtractor : FeatureExtractor
     /// <param name="herz">Modulation frequency</param>
     public List<float[]> VectorsAtHerz(IList<float[]> featureVectors, float herz = 4)
     {
-        var length = _filterbank?.Length ?? _featuregram[0].Length;
+        var length = _featuregram is null ? _filterbank.Length : _featuregram[0].Length;
         var modulationSamplingRate = (float) SamplingRate / HopSize;
         var resolution = modulationSamplingRate / _modulationFftSize;
         var freq = (int) Math.Round(herz / resolution);

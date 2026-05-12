@@ -39,7 +39,7 @@ public class SpectralFeaturesExtractor : FeatureExtractor
     /// <summary>
     /// Extractor parameters.
     /// </summary>
-    protected readonly Dictionary<string, object> _parameters;
+    protected readonly Dictionary<string, object>? _parameters;
 
     /// <summary>
     /// FFT transformer.
@@ -57,14 +57,14 @@ public class SpectralFeaturesExtractor : FeatureExtractor
     protected readonly float[] _spectrum;
 
     /// <summary>
-    /// Internal buffer for magnitude spectrum taken only at frequencies of interest.
+    /// Internal buffer for magnitude spectrum taken only at frequencies of interest. Set lazily.
     /// </summary>
-    protected float[] _mappedSpectrum;
+    protected float[] _mappedSpectrum = null!;
 
     /// <summary>
-    /// Internal buffer for spectral positions of frequencies of interest.
+    /// Internal buffer for spectral positions of frequencies of interest. Set lazily in the same branch as <see cref="_mappedSpectrum"/>.
     /// </summary>
-    protected readonly int[] _frequencyPositions;
+    protected readonly int[] _frequencyPositions = null!;
 
     /// <summary>
     /// Constructs extractor from configuration <paramref name="options"/>.

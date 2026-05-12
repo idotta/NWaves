@@ -19,12 +19,12 @@ public class CsvFeatureSerializer
     /// <summary>
     /// Sequence of time markers for serialization.
     /// </summary>
-    private readonly IList<double> _timeMarkers;
+    private readonly IList<double>? _timeMarkers;
 
     /// <summary>
     /// Sequence of feature names/annotations for serialization.
     /// </summary>
-    private readonly IList<string> _names;
+    private readonly IList<string>? _names;
 
     /// <summary>
     /// Delimiter symbol.
@@ -39,8 +39,8 @@ public class CsvFeatureSerializer
     /// <param name="featureNames">Sequence of feature names/annotations for serialization</param>
     /// <param name="delimiter">Delimiter char</param>
     public CsvFeatureSerializer(IList<float[]> featureVectors,
-                                IList<double> timeMarkers = null,
-                                IList<string> featureNames = null,
+                                IList<double>? timeMarkers = null,
+                                IList<string>? featureNames = null,
                                 char delimiter = ',')
     {
         _vectors = featureVectors;

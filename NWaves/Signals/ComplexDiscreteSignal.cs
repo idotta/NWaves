@@ -43,7 +43,7 @@ public class ComplexDiscreteSignal
     /// <param name="real">Array of real parts of the complex-valued signal</param>
     /// <param name="imag">Array of imaginary parts of the complex-valued signal</param>
     /// <param name="allocateNew">Set to true if new memory should be allocated for data</param>
-    public ComplexDiscreteSignal(int samplingRate, double[] real, double[] imag = null, bool allocateNew = false)
+    public ComplexDiscreteSignal(int samplingRate, double[] real, double[]? imag = null, bool allocateNew = false)
     {
         Guard.AgainstNonPositive(samplingRate, "Sampling rate");
 
@@ -70,7 +70,7 @@ public class ComplexDiscreteSignal
     /// <param name="samplingRate">Sampling rate of the signal</param>
     /// <param name="real">Array of real parts of the complex-valued signal</param>
     /// <param name="imag">Array of imaginary parts of the complex-valued signal</param>
-    public ComplexDiscreteSignal(int samplingRate, IEnumerable<double> real, IEnumerable<double> imag = null)
+    public ComplexDiscreteSignal(int samplingRate, IEnumerable<double> real, IEnumerable<double>? imag = null)
         : this(samplingRate, real.ToArray(), imag?.ToArray())
     {
     }

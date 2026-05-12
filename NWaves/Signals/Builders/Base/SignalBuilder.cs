@@ -27,12 +27,12 @@ public abstract class SignalBuilder : ISampleGenerator, ISignalBuilder
     /// <summary>
     /// Resulting signal.
     /// </summary>
-    protected DiscreteSignal Signal { get; set; }
+    protected DiscreteSignal Signal { get; set; } = null!;
 
     /// <summary>
-    /// Dictionary of setters for each parameter.
+    /// Dictionary of setters for each parameter. Initialized by derived ctor.
     /// </summary>
-    protected Dictionary<string, Action<double>> ParameterSetters { get; set; }
+    protected Dictionary<string, Action<double>> ParameterSetters { get; set; } = null!;
 
     /// <summary>
     /// Gets the sampling rate of the signal.

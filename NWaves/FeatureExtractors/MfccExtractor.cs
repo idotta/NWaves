@@ -51,9 +51,9 @@ public class MfccExtractor : FeatureExtractor
     protected readonly int _lifterSize;
 
     /// <summary>
-    /// Liftering window coefficients.
+    /// Liftering window coefficients. Null when liftering disabled (<see cref="_lifterSize"/> is 0).
     /// </summary>
-    protected readonly float[] _lifterCoeffs;
+    protected readonly float[]? _lifterCoeffs;
 
     /// <summary>
     /// FFT transformer.
@@ -153,6 +153,10 @@ public class MfccExtractor : FeatureExtractor
         _includeEnergy = options.IncludeEnergy;
         _logEnergyFloor = options.LogEnergyFloor;
 
+        // reserve memory for reusable blocks BEFORE wiring up delegates that close over them
+        _spectrum = new float[_blockSize / 2 + 1];
+        _melSpectrum = new float[filterbankSize];
+
         // setup DCT: ============================================================================
 
         _dctType = options.DctType;
@@ -203,11 +207,6 @@ public class MfccExtractor : FeatureExtractor
             default:
                 _getSpectrum = block => _fft.PowerSpectrum(block, _spectrum, false); break;
         }
-
-        // reserve memory for reusable blocks
-
-        _spectrum = new float[_blockSize / 2 + 1];
-        _melSpectrum = new float[filterbankSize];
     }
 
     /// <summary>
@@ -265,7 +264,7 @@ public class MfccExtractor : FeatureExtractor
     /// <summary>
     /// Creates thread-safe copy of the extractor for parallel computations.
     /// </summary>
-    public override FeatureExtractor ParallelCopy() =>
+    public override FeatureExtractor? ParallelCopy() =>
         new MfccExtractor(
             new MfccOptions
             {

@@ -18,7 +18,7 @@ public class FilterChain64 : IFilter64, IOnlineFilter64
     /// Constructs <see cref="FilterChain64"/> from collection of <paramref name="filters"/>.
     /// </summary>
     /// <param name="filters">Collection of online filters</param>
-    public FilterChain64(IEnumerable<IOnlineFilter64> filters = null)
+    public FilterChain64(IEnumerable<IOnlineFilter64>? filters = null)
     {
         _filters = filters?.ToList() ?? new List<IOnlineFilter64>();
     }

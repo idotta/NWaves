@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -41,6 +42,7 @@ public class WaveFile : IAudioContainer
     /// <param name="normalized">Normalize samples</param>
     public WaveFile(Stream waveStream, bool normalized = true)
     {
+        ArgumentNullException.ThrowIfNull(waveStream);
         ReadWaveStream(waveStream, normalized);
     }
 
@@ -51,6 +53,7 @@ public class WaveFile : IAudioContainer
     /// <param name="normalized">Normalize samples</param>
     public WaveFile(byte[] waveBytes, bool normalized = true)
     {
+        ArgumentNullException.ThrowIfNull(waveBytes);
         using var stream = new MemoryStream(waveBytes);
         ReadWaveStream(stream, normalized);
     }
@@ -61,8 +64,9 @@ public class WaveFile : IAudioContainer
     /// <param name="waveBytes">Input array of bytes</param>
     /// <param name="index">Start position in byte array</param>
     /// <param name="normalized">Normalize samples</param>
-    public WaveFile(byte[] waveBytes, int index, bool normalized = true) 
+    public WaveFile(byte[] waveBytes, int index, bool normalized = true)
     {
+        ArgumentNullException.ThrowIfNull(waveBytes);
         using var stream = new MemoryStream(waveBytes, index, waveBytes.Length - index);
         ReadWaveStream(stream, normalized);
     }
@@ -72,6 +76,7 @@ public class WaveFile : IAudioContainer
     /// </summary>
     /// <param name="waveStream">Input stream of PCM WAV binary data</param>
     /// <param name="normalized">Normalize samples</param>
+    [MemberNotNull(nameof(Signals))]
     protected void ReadWaveStream(Stream waveStream, bool normalized = true)
     {
         using var reader = new BinaryReader(waveStream, Encoding.ASCII, true);

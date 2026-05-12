@@ -51,7 +51,7 @@ public class TestMathFunctions
         var roots = MathUtils.PolynomialRoots(re);
 
         double[] expected = [-3, -1, 2];
-        Assert.That(roots.Select(r => r.Real).OrderBy(r => r), Is.EqualTo(expected).Within(1e-7));
+        Assert.That(roots!.Select(r => r.Real).OrderBy(r => r), Is.EqualTo(expected).Within(1e-7));
     }
 
     [Test]
@@ -66,8 +66,8 @@ public class TestMathFunctions
 
         Assert.Multiple(() =>
         {
-            Assert.That(roots.Select(r => r.Real).OrderBy(r => r), Is.EqualTo(expectedReal).Within(1e-7));
-            Assert.That(roots.Select(r => r.Imaginary).OrderBy(r => r), Is.EqualTo(expectedImag).Within(1e-7));
+            Assert.That(roots!.Select(r => r.Real).OrderBy(r => r), Is.EqualTo(expectedReal).Within(1e-7));
+            Assert.That(roots!.Select(r => r.Imaginary).OrderBy(r => r), Is.EqualTo(expectedImag).Within(1e-7));
         });
     }
 

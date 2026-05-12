@@ -29,9 +29,9 @@ public class ChorusEffect : AudioEffect
     }
 
     /// <summary>
-    /// Gets or sets LFO frequencies for each voice.
+    /// Gets or sets LFO frequencies for each voice. Null when the LFO-builder constructor was used.
     /// </summary>
-    public float[] LfoFrequencies
+    public float[]? LfoFrequencies
     {
         get => _lfoFrequencies;
         set
@@ -40,11 +40,11 @@ public class ChorusEffect : AudioEffect
 
             for (var i = 0; i < _voices.Length; i++)
             {
-                _voices[i].LfoFrequency = value[i];
+                _voices[i].LfoFrequency = value![i];
             }
         }
     }
-    private float[] _lfoFrequencies;
+    private float[]? _lfoFrequencies;
 
     /// <summary>
     /// Chorus voices.

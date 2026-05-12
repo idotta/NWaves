@@ -44,7 +44,7 @@ public class KarplusStrongBuilder : WaveTableBuilder
     /// Constructs <see cref="KarplusStrongBuilder"/> from array of <paramref name="samples"/>.
     /// </summary>
     /// <param name="samples">Array of samples</param>
-    public KarplusStrongBuilder(float[] samples) : base(samples)
+    public KarplusStrongBuilder(float[]? samples) : base(samples)
     {
         Init();
     }

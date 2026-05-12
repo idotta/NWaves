@@ -41,7 +41,7 @@ public class FirFilter64 : LtiFilter64
     /// <summary>
     /// Transfer function.
     /// </summary>
-    protected TransferFunction _tf;
+    protected TransferFunction? _tf;
 
     /// <summary>
     /// Gets transfer function.

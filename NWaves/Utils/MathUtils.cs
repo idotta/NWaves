@@ -267,7 +267,7 @@ public static class MathUtils
     /// </summary>
     /// <param name="a">Polynomial coefficients</param>
     /// <param name="maxIterations">Max number of iterations</param>
-    public static Complex[] PolynomialRoots(double[] a, int maxIterations = PolyRootsIterations)
+    public static Complex[]? PolynomialRoots(double[] a, int maxIterations = PolyRootsIterations)
     {
         var n = a.Length;
         if (n <= 1)

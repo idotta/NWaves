@@ -125,6 +125,11 @@ public static class Lpc
     /// <param name="lsf">Line spectral frequencies</param>
     public static void ToLsf(float[] lpc, float[] lsf)
     {
+        if (lpc.Length < 2)
+        {
+            throw new ArgumentException("LPC vector must contain at least 2 coefficients.", nameof(lpc));
+        }
+
         var first = lpc[0];
 
         if (Math.Abs(first - 1) > 1e-10)
@@ -146,8 +151,8 @@ public static class Lpc
         p[p.Length - 1] = -1;
         q[q.Length - 1] = 1;
 
-        var pRoots = MathUtils.PolynomialRoots(p.ToDoubles()).Select(r => r.Phase).ToArray();
-        var qRoots = MathUtils.PolynomialRoots(q.ToDoubles()).Select(r => r.Phase).ToArray();
+        var pRoots = MathUtils.PolynomialRoots(p.ToDoubles())!.Select(r => r.Phase).ToArray();
+        var qRoots = MathUtils.PolynomialRoots(q.ToDoubles())!.Select(r => r.Phase).ToArray();
 
         Array.Sort(pRoots);
         Array.Sort(qRoots);

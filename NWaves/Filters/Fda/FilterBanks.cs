@@ -44,8 +44,8 @@ public static class FilterBanks
     public static float[][] Triangular(int fftSize,
                                        int samplingRate,
                                        (double, double, double)[] frequencies,
-                                       VtlnWarper vtln = null,
-                                       Func<double, double> mapper = null)
+                                       VtlnWarper? vtln = null,
+                                       Func<double, double>? mapper = null)
     {
         if (mapper is null) mapper = x => x;
 
@@ -96,8 +96,8 @@ public static class FilterBanks
     public static float[][] Rectangular(int fftSize,
                                        int samplingRate,
                                        (double, double, double)[] frequencies,
-                                       VtlnWarper vtln = null,
-                                       Func<double, double> mapper = null)
+                                       VtlnWarper? vtln = null,
+                                       Func<double, double>? mapper = null)
     {
         if (mapper is null) mapper = x => x;
 
@@ -144,8 +144,8 @@ public static class FilterBanks
     public static float[][] Trapezoidal(int fftSize,
                                        int samplingRate,
                                        (double, double, double)[] frequencies,
-                                       VtlnWarper vtln = null,
-                                       Func<double, double> mapper = null)
+                                       VtlnWarper? vtln = null,
+                                       Func<double, double>? mapper = null)
     {
         var filterBank = Rectangular(fftSize, samplingRate, frequencies, vtln, mapper);
 
@@ -569,7 +569,7 @@ public static class FilterBanks
     /// <param name="normalizeGain">True if gain should be normalized; false if all filters should have same height 1.0</param>
     /// <param name="vtln">VTLN frequency warper</param>
     public static float[][] MelBankSlaney(
-        int filterCount, int fftSize, int samplingRate, double lowFreq = 0, double highFreq = 0, bool normalizeGain = true, VtlnWarper vtln = null)
+        int filterCount, int fftSize, int samplingRate, double lowFreq = 0, double highFreq = 0, bool normalizeGain = true, VtlnWarper? vtln = null)
     {
         if (lowFreq < 0)
         {

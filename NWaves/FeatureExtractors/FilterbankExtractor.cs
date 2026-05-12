@@ -98,6 +98,10 @@ public class FilterbankExtractor : FeatureExtractor
 
         _fft = new RealFft(_blockSize);
 
+        // reserve memory for reusable blocks BEFORE wiring up delegates that close over them
+        _spectrum = new float[_blockSize / 2 + 1];
+        _bandSpectrum = new float[filterbankSize];
+
         // setup spectrum post-processing: =======================================================
 
         _logFloor = options.LogFloor;
@@ -128,11 +132,6 @@ public class FilterbankExtractor : FeatureExtractor
             default:
                 _getSpectrum = block => _fft.PowerSpectrum(block, _spectrum, false); break;
         }
-
-        // reserve memory for reusable blocks
-
-        _spectrum = new float[_blockSize / 2 + 1];
-        _bandSpectrum = new float[filterbankSize];
     }
 
     /// <summary>
@@ -163,7 +162,7 @@ public class FilterbankExtractor : FeatureExtractor
     /// <summary>
     /// Creates thread-safe copy of the extractor for parallel computations.
     /// </summary>
-    public override FeatureExtractor ParallelCopy() =>
+    public override FeatureExtractor? ParallelCopy() =>
         new FilterbankExtractor(
             new FilterbankOptions
             {

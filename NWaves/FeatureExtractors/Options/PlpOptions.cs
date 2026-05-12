@@ -58,7 +58,7 @@ public class PlpOptions : FilterbankOptions
     public int LifterSize { get; set; }
     
     [DataMember]
-    public double[] CenterFrequencies { get; set; }
+    public double[]? CenterFrequencies { get; set; }
 
     [DataMember]
     public bool IncludeEnergy { get; set; }

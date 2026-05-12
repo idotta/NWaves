@@ -17,16 +17,16 @@ public class Convolver
     private int _fftSize;
 
     /// <summary>
-    /// Internal FFT transformer.
+    /// Internal FFT transformer. Lazily allocated.
     /// </summary>
-    private RealFft _fft;
+    private RealFft? _fft;
 
-    // internal reusable buffers
+    // internal reusable buffers (lazily allocated together with <see cref="_fft"/>)
 
-    private float[] _real1;
-    private float[] _imag1;
-    private float[] _real2;
-    private float[] _imag2;
+    private float[] _real1 = null!;
+    private float[] _imag1 = null!;
+    private float[] _real2 = null!;
+    private float[] _imag2 = null!;
 
     /// <summary>
     /// Constructs <see cref="Convolver"/>. 
@@ -45,6 +45,7 @@ public class Convolver
     /// <summary>
     /// Prepares all necessary arrays for calculations.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(_fft))]
     private void PrepareMemory(int fftSize)
     {
         _fftSize = fftSize;
@@ -93,7 +94,7 @@ public class Convolver
 
         // 1) do FFT of both signals
 
-        _fft.Direct(_real1, _real1, _imag1);
+        _fft!.Direct(_real1, _real1, _imag1);
         _fft.Direct(_real2, _real2, _imag2);
 
         // 2) do complex multiplication of spectra and normalize

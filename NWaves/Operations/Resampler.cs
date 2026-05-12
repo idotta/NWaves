@@ -24,7 +24,7 @@ public class Resampler
     /// <param name="signal">Signal</param>
     /// <param name="factor">Interpolation factor (e.g. factor=2 if 8000 Hz -> 16000 Hz)</param>
     /// <param name="filter">Lowpass anti-aliasing filter</param>
-    public DiscreteSignal Interpolate(DiscreteSignal signal, int factor, FirFilter filter = null)
+    public DiscreteSignal Interpolate(DiscreteSignal signal, int factor, FirFilter? filter = null)
     {
         if (factor == 1)
         {
@@ -51,7 +51,7 @@ public class Resampler
             lpFilter = new FirFilter(DesignFilter.FirWinLp(filterSize, 0.5f / factor));
         }
 
-        return lpFilter.ApplyTo(new DiscreteSignal(signal.SamplingRate * factor, output));
+        return lpFilter!.ApplyTo(new DiscreteSignal(signal.SamplingRate * factor, output));
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class Resampler
     /// <param name="signal">Signal</param>
     /// <param name="factor">Decimation factor (e.g. factor=2 if 16000 Hz -> 8000 Hz)</param>
     /// <param name="filter">Lowpass anti-aliasing filter</param>
-    public DiscreteSignal Decimate(DiscreteSignal signal, int factor, FirFilter filter = null)
+    public DiscreteSignal Decimate(DiscreteSignal signal, int factor, FirFilter? filter = null)
     {
         if (factor == 1)
         {
@@ -99,7 +99,7 @@ public class Resampler
     /// <param name="order">Order</param>
     public DiscreteSignal Resample(DiscreteSignal signal,
                                    int newSamplingRate,
-                                   FirFilter filter = null,
+                                   FirFilter? filter = null,
                                    int order = 15)
     {
         if (signal.SamplingRate == newSamplingRate)
@@ -151,7 +151,7 @@ public class Resampler
     /// <param name="up">Interpolation factor</param>
     /// <param name="down">Decimation factor</param>
     /// <param name="filter">Lowpass anti-aliasing filter</param>
-    public DiscreteSignal ResampleUpDown(DiscreteSignal signal, int up, int down, FirFilter filter = null)
+    public DiscreteSignal ResampleUpDown(DiscreteSignal signal, int up, int down, FirFilter? filter = null)
     {
         if (up == down)
         {
@@ -186,7 +186,7 @@ public class Resampler
             lpFilter = new FirFilter(DesignFilter.FirWinLp(filterSize, 0.5f / factor));
         }
 
-        var upsampled = lpFilter.ApplyTo(new DiscreteSignal(signal.SamplingRate * up, output));
+        var upsampled = lpFilter!.ApplyTo(new DiscreteSignal(signal.SamplingRate * up, output));
 
         output = new float[upsampled.Length / down];
 

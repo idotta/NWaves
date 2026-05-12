@@ -39,7 +39,7 @@ public static class FeatureExtractorOptionsExtensions
     /// </summary>
     /// <typeparam name="T">Options type</typeparam>
     /// <param name="stream">Input stream containing JSON data</param>
-    public static T LoadOptions<T>(this Stream stream) where T : FeatureExtractorOptions
+    public static T? LoadOptions<T>(this Stream stream) where T : FeatureExtractorOptions
     {
         var currentCulture = Thread.CurrentThread.CurrentCulture;
         Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -47,7 +47,7 @@ public static class FeatureExtractorOptionsExtensions
         try
         {
             var js = new DataContractJsonSerializer(typeof(T));
-            return (T)js.ReadObject(stream);
+            return (T?)js.ReadObject(stream);
         }
         finally
         {
@@ -74,7 +74,7 @@ public static class FeatureExtractorOptionsExtensions
 
         using (var config = new MemoryStream(data))
         {
-            return config.LoadOptions<U>();
+            return config.LoadOptions<U>()!;
         }
     }
 }

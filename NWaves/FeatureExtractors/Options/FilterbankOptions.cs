@@ -35,7 +35,7 @@ namespace NWaves.FeatureExtractors.Options;
 public class FilterbankOptions : FeatureExtractorOptions
 {
     [DataMember]
-    public float[][] FilterBank { get; set; }
+    public float[][]? FilterBank { get; set; }
     [DataMember]
     public int FilterBankSize { get; set; } = 12;
     [DataMember]

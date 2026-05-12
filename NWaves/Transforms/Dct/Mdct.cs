@@ -27,7 +27,7 @@ public class Mdct : IDct
     /// </summary>
     /// <param name="dctSize">Size of MDCT</param>
     /// <param name="dct">Internal DCT transformer (by default, <see cref="Dct4"/>)</param>
-    public Mdct(int dctSize, IDct dct = null)
+    public Mdct(int dctSize, IDct? dct = null)
     {
         _dct = dct ?? new Dct4(dctSize);
         _temp = new float[dctSize];
